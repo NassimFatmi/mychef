@@ -12,12 +12,22 @@ class UserController extends Controller
 {
     public function create(Request $request){
 
-        $user = User::where('email', $request->email)->first();
-        $user =  new User();
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
-        $user->password = Hash::make($request->input('password'));
-        $user->save();
+        $request->validate([
+            'email' => "required|email|unique:users",
+            "password" => "required|min:6",
+            "name" => "required|unique:users|min:6"
+        ]);
+
+        $user = User::where('email',$request->email)->first();
+
+        if($user){
+            return ['error' => "Email or Username already exists"];
+        }
+            $user = new User();
+            $user->name = $request->input('name');
+            $user->email = $request->input('email');
+            $user->password = Hash::make($request->input('password'));
+            $user->save();
 
         if($request->input('profile')){
             $profile =  new Profile();
@@ -30,8 +40,8 @@ class UserController extends Controller
             $user->profile_id = $profile->id;
         }
         $user->update();
+        return $user;
 
-        return $user->createToken($request->device_name)->plainTextToken;
     }
 
     public function login(Request $request){

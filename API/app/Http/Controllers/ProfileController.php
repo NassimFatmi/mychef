@@ -9,6 +9,6 @@ class ProfileController extends Controller
 {
     public function show($id){
         $u = User::where('id', $id)->first();
-        return $u->profile;
+        return $u?->profile;
     }
 }
