@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
                   : Colors.black),
         ),
       ),
-      home: HomeScreen(),
+      home: AuthScreen(),
     );
   }
 }
