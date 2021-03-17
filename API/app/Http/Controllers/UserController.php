@@ -17,6 +17,7 @@ class UserController extends Controller
         $user->name = $request->input('name');
         $user->email = $request->input('email');
         $user->password = Hash::make($request->input('password'));
+        $user->save();
 
         if($request->input('profile')){
             $profile =  new Profile();
@@ -28,9 +29,9 @@ class UserController extends Controller
             $profile->save();
             $user->profile_id = $profile->id;
         }
-        $user->save();
+        $user->update();
 
-        return user()->createToken($request->device_name)->plainTextToken;
+        return $user->createToken($request->device_name)->plainTextToken;
     }
 
     public function login(Request $request){
