@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../services/auth.dart';
 
 class AuthScreen extends StatefulWidget {
   @override
@@ -191,11 +194,14 @@ class _AuthScreenState extends State<AuthScreen> {
                     onPressed: _submit,
                   ),
                   TextButton(
-                      onPressed: () => setState(() {
-                            _authMode = (_authMode == AuthModes.login)
-                                ? AuthModes.signup
-                                : AuthModes.login;
-                          }),
+                      onPressed: () {
+                        setState(() {
+                          _authMode = (_authMode == AuthModes.login)
+                              ? AuthModes.signup
+                              : AuthModes.login;
+                        });
+                        Provider.of<Auth>(context, listen: false).testApi();
+                      },
                       child: Text(
                         _authMode == AuthModes.login
                             ? 'i don\'t have an account'

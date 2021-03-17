@@ -8,6 +8,16 @@ class Auth with ChangeNotifier {
 
   bool get isAuthenticated => _isAuthenticated;
 
+  Future<void> testApi() async {
+    var apiURl = Uri.http('root@192.168.43.87:8000', '/api/test');
+    var response = await http.get(apiURl);
+    if (response.statusCode == 200) {
+      var result = jsonDecode(response.body);
+
+      print(result['name']);
+    }
+  }
+
   Future<void> _authentificate(String email, String password) async {
     final url = Uri.http('', '');
 
