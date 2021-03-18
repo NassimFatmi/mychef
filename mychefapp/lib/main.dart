@@ -56,7 +56,14 @@ class MyApp extends StatelessWidget {
                     : Colors.black),
           ),
         ),
-        home: AuthScreen(),
+        home: Consumer<Auth>(builder: (context, auth, _) {
+          if (auth.isAuth)
+            return HomeScreen();
+          else {
+            auth.tryAutoLogin();
+            return AuthScreen();
+          }
+        }),
       ),
     );
   }

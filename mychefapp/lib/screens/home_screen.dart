@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mychefapp/services/auth.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -15,7 +17,11 @@ class _HomeScreenState extends State<HomeScreen> {
             floating: true,
             centerTitle: true,
             actions: [
-              IconButton(icon: Icon(Icons.more_vert_outlined), onPressed: () {})
+              IconButton(
+                  icon: Icon(Icons.logout),
+                  onPressed: () {
+                    Provider.of<Auth>(context, listen: false).logOut();
+                  })
             ],
             title: Row(
               children: [
@@ -30,7 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
           SliverToBoxAdapter(
             child: Container(
               height: MediaQuery.of(context).size.height * 2,
-              color: Colors.red,
             ),
           ),
         ],

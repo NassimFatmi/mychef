@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../services/auth.dart';
+import '../services/auth.dart';
 
 class AuthScreen extends StatefulWidget {
   @override
@@ -27,7 +28,27 @@ class _AuthScreenState extends State<AuthScreen> {
     final isValid = _formKey.currentState.validate();
     FocusScope.of(context).unfocus();
     if (isValid) {
-      print(_email);
+      if (_authMode == AuthModes.login) {
+        try {
+          Provider.of<Auth>(context, listen: false)
+              .login(_email.trim(), _password.trim());
+        } catch (e) {
+          print(e);
+        }
+      } else {
+        //print(_email);
+        //print(_password);
+        //print(_username);
+        try {
+          Provider.of<Auth>(context, listen: false)
+              .createUser(_email.trim(), _password.trim(), _username.trim());
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: Theme.of(context).errorColor,
+          ));
+        }
+      }
     }
   }
 
@@ -75,7 +96,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     validator: (value) => !value.contains('@') || value.isEmpty
                         ? 'email not valide'
                         : null,
-                    onSaved: (value) => _email = value,
+                    onChanged: (value) => _email = value,
                     style: TextStyle(fontSize: 18),
                     autocorrect: false,
                     textCapitalization: TextCapitalization.none,
@@ -101,7 +122,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     TextFormField(
                       validator: (value) =>
                           value.isEmpty ? 'please enter your Username' : null,
-                      onSaved: (value) => _username = value,
+                      onChanged: (value) => _username = value,
                       style: TextStyle(fontSize: 18),
                       autocorrect: false,
                       textCapitalization: TextCapitalization.none,
@@ -131,7 +152,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         validator: (value) => value.isEmpty
                             ? 'password not valide / password should be at least 6 caracters'
                             : null,
-                        onSaved: (value) => _password = value,
+                        onChanged: (value) => _password = value,
                         style: TextStyle(fontSize: 18),
                         textCapitalization: TextCapitalization.none,
                         autocorrect: false,
@@ -200,7 +221,6 @@ class _AuthScreenState extends State<AuthScreen> {
                               ? AuthModes.signup
                               : AuthModes.login;
                         });
-                        Provider.of<Auth>(context, listen: false).testApi();
                       },
                       child: Text(
                         _authMode == AuthModes.login
